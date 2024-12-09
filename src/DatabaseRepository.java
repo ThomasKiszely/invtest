@@ -117,8 +117,7 @@ public class DatabaseRepository {
              PreparedStatement preparedStatement = connection.prepareStatement(sql)){
             preparedStatement.setInt(1, inventoryId);
             ResultSet resultSet = preparedStatement.executeQuery();
-                if (resultSet != null) {
-                while (resultSet.next()) {
+                    while (resultSet.next()) {
                     int iditemtest = resultSet.getInt("iditemtest");
                     String type = resultSet.getString("type");
                     String name = resultSet.getString("name");
@@ -127,10 +126,6 @@ public class DatabaseRepository {
                     int effect = resultSet.getInt("effect");
 
                     items.add(new Item(iditemtest, name, type, weight, description, effect));
-                }
-                    }
-                else {
-                        return null;
 
             }
         } catch (SQLException e) {

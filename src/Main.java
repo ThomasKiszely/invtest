@@ -25,7 +25,7 @@ public class Main {
         while (true) {
             System.out.println("Welcome to Legend of Zel... GameCraft\nChoose your poison\n1 to create item" +
                     "\n2 to see a list of items\n3 to update an item\n4 to delete an item\n5 to choose inventory and show its items" +
-                    "\n6 to add an item to inventory\n7 To remove item from inventory\n8 to show items i inventory\n9 to exit" +
+                    "\n6 to add an item to inventory\n7 To remove item from inventory\n8 to show items in inventory\n9 to exit" +
                     "\n10 to show slot and weight");
             try {
                 int choice = input.nextInt();
@@ -88,14 +88,20 @@ public class Main {
                         System.out.println("You chose 5");
                         System.out.println("Indtast id for 'Inventory', der skal vises");
                         int id = input.nextInt();
-                        inventory = inventory.initiateInventory(id);
-                        for (Item item : inventory.getItems()) {
-                            System.out.println(item);
+                        if (inventory.initiateInventory(id) == null) {
+                            System.out.println("No inventory found");
                         }
-                        System.out.println("\nslots used: " +  inventory.getSlotCurrent() +
-                                " out of " + inventory.getSlotCurrentMax() +
-                                "\n \nCurrent weight is: " + inventory.getWeightCurrent() +
-                                " out of " + inventory.getWeightCurrentMax() + "\n");
+                        else {
+                            inventory = inventory.initiateInventory(id);
+
+                            for (Item item : inventory.getItems()) {
+                                System.out.println(item);
+                            }
+                            System.out.println("\nslots used: " + inventory.getSlotCurrent() +
+                                    " out of " + inventory.getSlotCurrentMax() +
+                                    "\n \nCurrent weight is: " + inventory.getWeightCurrent() +
+                                    " out of " + inventory.getWeightMax() + "\n");
+                        }
                     }
                     case 6 -> {
                         System.out.println("You chose 6");
@@ -110,6 +116,10 @@ public class Main {
                         for (Item item : inventory.getItems()) {
                             System.out.println(item.getName());
                         }
+                        System.out.println("\nslots used: " + inventory.getSlotCurrent() +
+                                " out of " + inventory.getSlotCurrentMax() +
+                                "\n \nCurrent weight is: " + inventory.getWeightCurrent() +
+                                " out of " + inventory.getWeightMax() + "\n");
                     }
                     case 7 -> {
                         System.out.println("You chose 7");

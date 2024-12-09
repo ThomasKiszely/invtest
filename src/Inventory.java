@@ -4,10 +4,9 @@ import java.util.List;
 
 public class Inventory {
     private int slotCurrent;
-    private int slotCurrentMax = 50;
+    private int slotCurrentMax = 32;
     private final int slotMax = 192;
     private int weightCurrent;
-    private int weightCurrentMax = 32;
     private final int weightMax = 50;
     public List<Item> items = new ArrayList<>();
 
@@ -38,20 +37,16 @@ public class Inventory {
         return weightCurrent;
     }
 
+    public int getWeightMax() {
+        return weightMax;
+    }
+
     public int getSlotCurrentMax() {
         return slotCurrentMax;
     }
 
     public void setSlotCurrentMax(int slotCurrentMax) {
         this.slotCurrentMax = slotCurrentMax;
-    }
-
-    public int getWeightCurrentMax() {
-        return weightCurrentMax;
-    }
-
-    public void setWeightCurrentMax(int weightCurrentMax) {
-        this.weightCurrentMax = weightCurrentMax;
     }
 
     public List<Item> getItems() {
@@ -67,7 +62,10 @@ public class Inventory {
         int weight = 0;
         int slot = 0;
         List<Item> items = repository.initiateInventory(inventoryId);
-        if (items != null) {
+        if (items.isEmpty()) {
+            return null;
+        }
+        else{
             for (Item item : items) {
                 weight += item.getWeight();
                 slot++;
@@ -78,21 +76,26 @@ public class Inventory {
             setWeightCurrent(weight);
             return new Inventory(slot, weight, items);
 //        return ("weight is " + weight + " and used slots are " + slot);
+
         }
-        return null;
     }
 
     public String addItemToInventory(int invId, int itemid) {
         Item item = repository.getOneItem(itemid);
         System.out.println(item.getType());
         if (item.getWeight() + weightCurrent < weightMax) {
-            if (slotCurrent < slotMax) {
-                String added = repository.addItemToInventory(invId, itemid);
-                items.add(item);
-                slotCurrent ++;
-                weightCurrent += item.getWeight();
-                System.out.println(item);
-                return added;
+            if (item.getType().equals("Consumable") && items.contains(item.getName())) {
+                System.out.println(item.getName());
+                slotCurrent --;
+                if (slotCurrent <= slotMax) {
+                    String added = repository.addItemToInventory(invId, itemid);
+                    items.add(item);
+                    slotCurrent ++;
+                    weightCurrent += item.getWeight();
+                    System.out.println(item);
+                    return added;
+            }
+
             }
         } else {
             return "Inventory Full";
@@ -111,7 +114,7 @@ public class Inventory {
                 Item obj = items.get(i);
                 if (obj.getId() == itemid) {
                     items.remove(i);
-                    slotCurrent -= item.getWeight();
+                    slotCurrent --;
                     weightCurrent -= item.getWeight();
                     return "Item removed from inventory";
                 }
