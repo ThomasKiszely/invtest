@@ -10,25 +10,16 @@ public class Main {
         Inventory inventory = new Inventory(0,0, 0, itemsMain);
         Scanner input = new Scanner(System.in);
 
-        System.out.println("Hello, World!");
+        System.out.println("---Initializing---");
         inventory = inventory.initiateInventory(1);
-//        System.out.println(inventory.getItems() + "\nslots used: " +  inventory.getSlotCurrent() +
-//                "\nCurrent weight is: " + inventory.getWeightCurrent());
-//        Inventory inv = new Inventory();
-//        List<Item> items = inv.itemsList();
-//        for (Item item : items) {
-//            weight = item.getWeight();
-//            currentWeight += weight;
-//
- //        }
-//        System.out.println("Your current weight is " + currentWeight);
+
         while (true) {
             System.out.println("Welcome to Legend of Zel... GameCraft\nChoose your poison\n1 to create item" +
-                    "\n2 to see a list of items\n3 to update an item\n4 to delete an item\n5 to make  a new inventory" +
+                    "\n2 to see a list of items\n3 to update an item\n4 to delete an item\n5 to make a new inventory" +
                     "\n6 to choose inventory and show its items" +
-                    "\n7 to add an item to inventory\n8 To remove item from inventory\n9 to show items in inventory" +
-                    "\n10 to increment slot size by 10\n11 to exit" +
-                    "\n12 to show slot and weight");
+                    "\n7 to add an item to inventory\n8 to remove item from inventory\n9 to show items in inventory" +
+                    "\n10 to increment slot size by 10\n11 to write out a text file of your inventory\n12 to exit" +
+                    "\n");
             try {
                 int choice = input.nextInt();
                 switch (choice) {
@@ -114,11 +105,9 @@ public class Main {
                     }
                     case 7 -> {
                         System.out.println("You chose 7");
-                        System.out.println("Indtast id for 'Inventory', der skal tilføjes til");
-                        int invid = input.nextInt();
                         System.out.println("Indtast id for 'item', der skal tilføjes");
                         int itemId = input.nextInt();
-                        String a2i = inventory.addItemToInventory(invid, itemId);
+                        String a2i = inventory.addItemToInventory(inventory.getId(), itemId);
                         System.out.println(a2i);
                         //itemsMain.add(repository.getOneItem(itemId));
                         System.out.println("Følgende er nu i inventory:\n");
@@ -132,11 +121,9 @@ public class Main {
                     }
                     case 8 -> {
                         System.out.println("You chose 8");
-                        System.out.println("Indtast id for 'Inventory', der skal fjernes fra");
-                        int invid = input.nextInt();
                         System.out.println("Indtast id for 'item', der skal fjernes");
                         int itemId = input.nextInt();
-                        String removeFromInventory = inventory.removeItemFromInventory(invid, itemId);
+                        String removeFromInventory = inventory.removeItemFromInventory(inventory.getId(), itemId);
                         System.out.println(removeFromInventory);
 //                        for (int i = 0; i < itemsMain.size(); i++) {
 //                            Item obj = itemsMain.get(i);
@@ -161,16 +148,13 @@ public class Main {
                         System.out.println(slotSize);
                     }
                     case 11 -> {
+                        System.out.println("You chose 11");
+                        String exported = inventory.exportInventory();
+                        System.out.println(exported);
+                    }
+                    case 12 -> {
                         System.out.println("Exiting...");
                         return;
-                    }
-
-                    case 12 -> {
-                        System.out.println("You chose 12");
-//                        System.out.println("Enter id for inventory");
-//                        int id = input.nextInt();
-                        System.out.println(inventory.getSlotCurrent());
-                        System.out.println(inventory.getWeightCurrent());
                     }
                     default -> {
                         System.out.println("Invalid choice try again");

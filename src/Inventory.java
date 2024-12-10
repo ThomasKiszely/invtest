@@ -1,6 +1,9 @@
+import java.io.FileWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.IOException;
 
 public class Inventory {
     private int id;
@@ -12,9 +15,6 @@ public class Inventory {
     public List<Item> items = new ArrayList<>();
 
     DatabaseRepository repository = new DatabaseRepository();
-
-    public Inventory() {
-    }
 
     public Inventory(int id, int slotCurrent, int weightCurrent, List<Item> items) {
         this.id = id;
@@ -92,8 +92,6 @@ public class Inventory {
                 System.out.println(item.getName());
                 if (slotCurrent <= slotCurrentMax) {
                     String added = repository.addItemToInventory(invId, itemid);
-                    items.add(item);
-                    //slotCurrent++;
                     weightCurrent += item.getWeight();
                     System.out.println("Item added: " + item);
                     return added;
@@ -147,6 +145,7 @@ public class Inventory {
         }
         return null;
     }
+
     public boolean checkItemStack(List<Item> items, Item item) {
         for (int i = 0; i < items.size(); i++) {
             Item obj = items.get(i);
@@ -163,9 +162,9 @@ public class Inventory {
             }
         }
         System.out.println("Item not found in stack.");
-
         return false;
     }
+
     public boolean checkWeight(Item item, int weightCurrent, int weightMax) {
         if (item.getWeight() + weightCurrent <= weightMax) {
             return true;
@@ -178,6 +177,7 @@ public class Inventory {
         }
         return false;
     }
+
     public String incrementMaxSlot(int slotCurrentMax, int slotMax) {
         int slotNewCurrentMax = slotCurrentMax;
         if (slotCurrentMax <= slotMax - 10) {
@@ -191,26 +191,19 @@ public class Inventory {
             return "Slot size couldn't be changed";
         }
     }
-
-
-
-//    List <Item> items = new ArrayList<>();
-//    Item item1 = new Armor(20, "Dark helmet", "Helmet", 5, "StoopidHelmet", 4);
-//    Item item2 = new Armor(25, "chestplate", "chest", 10, "Heyheyheyhey", 6);
-//    Item item3 = new Armor(35, "leggings");
-//    Item item4 = new Armor(45, "boots");
-//    public List<Item> itemsList() {
-//        items.add(item1);
-//        items.add(item2);
-//        items.add(item3);
-//        items.add(item4);
-//        for (Item item : items) {
-//            System.out.println(item.getWeight());
-//        }
-//        return items;
-//    }
-
-
+    public String exportInventory() {
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter("Inventory.txt"));
+            for (Item item : items) {
+                writer.write(item.toString() + "\n");
+            }
+            writer.close();
+            } catch (IOException ioe) {
+            System.out.println("Fejl i export af fil");
+            ioe.printStackTrace();
+        }
+        return "Inventory exported to file";
+    }
 }
 
 

@@ -6,11 +6,7 @@ public class DatabaseRepository {
 
     public DatabaseRepository() {
     }
-    //Participant participant;
 
-
-    //public List<Participant> participant = new ArrayList<>();
-//create
     public String addItem(Item item) {
         String sql = "INSERT INTO itemtest (iditemtest, name, type, weight, description, effect) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection connection = DatabaseConnection.getconnection();
@@ -54,12 +50,10 @@ public class DatabaseRepository {
                 int effect = resultSet.getInt("effect");
 
                 items.add(new Item(id, name, type, weight, description, effect));
-
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return items;
     }
 
@@ -85,7 +79,6 @@ public class DatabaseRepository {
             e.printStackTrace();
         }
         return ("Item updated");
-
     }
 
     //    //delete
@@ -98,13 +91,13 @@ public class DatabaseRepository {
             int deletedRows = preparedStatement.executeUpdate();
             if (deletedRows > 0) {
                 System.out.println("Item number " + id + " deleted");
-
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return ("Item deleted");
     }
+
     public int createNewInventory(int idUser){
         String sql = "INSERT INTO invtest (iduser) VALUES (?);";
         try (Connection connection = DatabaseConnection.getconnection();
@@ -124,7 +117,6 @@ public class DatabaseRepository {
                         throw new SQLException("Creating inventory failed, no ID obtained.");
                     }
                 }
-
             } else {
                 return 0;
             }
@@ -166,6 +158,7 @@ public class DatabaseRepository {
         }
         return items;
     }
+
     public int initiateSlots(int inventoryId) {
         String sql = "SELECT slotcurrent\n" +
                 "FROM invtest\n" +
@@ -184,6 +177,7 @@ public class DatabaseRepository {
         }
         return 0;
     }
+
     public String setSlotSize(int slotNewMax, int inventoryId) {
         String sql = "UPDATE invtest SET slotcurrentmax = ? WHERE idinvtest = ?";
 
@@ -202,6 +196,7 @@ public class DatabaseRepository {
         }
         return "Slot size updated in database";
     }
+
     public String addItemToInventory(int fkinvtest, int fkitemtest) {
         String sql = "INSERT INTO invhasitemtest (fkinvtest, fkitemtest) VALUES (?, ?)";
         try (Connection connection = DatabaseConnection.getconnection();
@@ -220,6 +215,7 @@ public class DatabaseRepository {
         }
         return null;
     }
+
     public String setSlot(int currentSlot, int inventoryId){
         String sql = "UPDATE invtest SET slotcurrent = ? WHERE idinvtest = ?";
 
@@ -257,59 +253,6 @@ public class DatabaseRepository {
         return null;
     }
 
-
-//        List<Item> items = new ArrayList<>();
-//        String sql = "SELECT invtest.idinvtest, itemtest.*\n" +
-//                "FROM invtest\n" +
-//                "JOIN invhasitemtest ON invtest.idinvtest = invhasitemtest.fkinvtest\n" +
-//                "JOIN itemtest ON invhasitemtest.fkitemtest = itemtest.iditemtest";
-//        try (Connection connection = DatabaseConnection.getconnection();
-//             Statement statement = connection.createStatement();
-//             ResultSet resultSet = statement.executeQuery(sql)) {
-//            while (resultSet.next()) {
-//                int iditemtest = resultSet.getInt("iditemtest");
-//                String type = resultSet.getString("type");
-//                String name = resultSet.getString("name");
-//                int weight = resultSet.getInt("weight");
-//                String description = resultSet.getString("description");
-//                int effect = resultSet.getInt("effect");
-//
-//                items.add(new Item(iditemtest, name, type, weight, description, effect));
-//                System.out.println("Her kommer tingene...");
-//
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        return items;
-//    }
-
-//    public Participant getOneParticipant(int userId) {
-//        List<Participant> participants = new ArrayList<>();
-//        String sql = "SELECT * FROM participants";
-//        try (Connection connection = DatabaseConnection.getconnection();
-//             Statement statement = connection.createStatement();
-//             ResultSet resultSet = statement.executeQuery(sql)) {
-//            while (resultSet.next()) {
-//                int id = resultSet.getInt("id");
-//                String name = resultSet.getString("name");
-//                int max_Drinks = resultSet.getInt("max_Drinks");
-//                int current_Drinks = resultSet.getInt("current_Drinks");
-//
-//                participants.add(new Participant(id, name, max_Drinks, current_Drinks));
-//                for (Participant participant : participants) {
-//                    if (participant.getId() == userId) {
-//                        return participant;
-//                    }
-//                }
-//
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//
-//        return null;
-//    }
     public Item getOneItem(int id) {
 
         String sql = "SELECT * FROM itemtest WHERE iditemtest = ?";
@@ -344,24 +287,4 @@ public class DatabaseRepository {
         }
         return null;
     }
-//    public List<Participant> getAParticipant() {
-//        List<Participant> participants = new ArrayList<>();
-//        String sql = "SELECT * FROM participants";
-//        try (Connection connection = DatabaseConnection.getconnection();
-//             PreparedStatement st = connection.prepareStatement(sql)){
-//            try (ResultSet resultSet = st.executeQuery()){
-//                while (resultSet.next()){
-//                    int id = resultSet.getInt("id");
-//                    String name = resultSet.getString("name");
-//                    int max_Drinks = resultSet.getInt("max_Drinks");
-//                    int current_Drinks = resultSet.getInt("current_Drinks");
-//                    participants.add(new Participant(id, name, max_Drinks, current_Drinks));
-//
-//                }
-//            }
-//
-//        }catch (SQLException e){}
-//        return participants;
-//    }
-//
 }
