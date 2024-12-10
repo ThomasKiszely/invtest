@@ -3,6 +3,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Inventory {
+    private int id;
     private int slotCurrent;
     private int slotCurrentMax = 32;
     private final int slotMax = 192;
@@ -15,10 +16,15 @@ public class Inventory {
     public Inventory() {
     }
 
-    public Inventory(int slotCurrent, int weightCurrent, List<Item> items) {
+    public Inventory(int id, int slotCurrent, int weightCurrent, List<Item> items) {
+        this.id = id;
         this.slotCurrent = slotCurrent;
         this.weightCurrent = weightCurrent;
         this.items = items;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public void setSlotCurrent(int slotCurrent) {
@@ -57,51 +63,58 @@ public class Inventory {
         this.items = items;
     }
 
+    public int getSlotMax() {
+        return slotMax;
+    }
+
     public Inventory initiateInventory(int id) {
         int inventoryId = id;
         int weight = 0;
-        int slot = 0;
+        int slot = repository.initiateSlots(id);
         List<Item> items = repository.initiateInventory(inventoryId);
         if (items.isEmpty()) {
-            return null;
-        }
-        else{
+            return new Inventory(inventoryId, slot, weight, items);
+        } else {
             for (Item item : items) {
                 weight += item.getWeight();
-                slot++;
-                //System.out.println(item.toString());
-
             }
             setSlotCurrent(slot);
             setWeightCurrent(weight);
-            return new Inventory(slot, weight, items);
-//        return ("weight is " + weight + " and used slots are " + slot);
-
+            return new Inventory(inventoryId, slot, weight, items);
         }
     }
 
     public String addItemToInventory(int invId, int itemid) {
         Item item = repository.getOneItem(itemid);
         System.out.println(item.getType());
-        if (item.getWeight() + weightCurrent < weightMax) {
-            if (item.getType().equals("Consumable") && items.contains(item.getName())) {
+        if (checkWeight(item, weightCurrent, weightMax)) {
+            if (checkItemStack(items, item)) { // Kalder CheckItemStack korrekt
                 System.out.println(item.getName());
-                slotCurrent --;
-                if (slotCurrent <= slotMax) {
+                if (slotCurrent <= slotCurrentMax) {
                     String added = repository.addItemToInventory(invId, itemid);
                     items.add(item);
-                    slotCurrent ++;
+                    //slotCurrent++;
                     weightCurrent += item.getWeight();
-                    System.out.println(item);
+                    System.out.println("Item added: " + item);
                     return added;
-            }
-
+                } else {
+                    return "No available slots.";
+                }
+            } else if (checkAvailableSlot(slotCurrent, slotCurrentMax)) {
+                String added = repository.addItemToInventory(invId, itemid);
+                items.add(item);
+                slotCurrent++;
+                String slotSet = repository.setSlot(slotCurrent, invId);
+                System.out.println("Slot set: " + slotSet);
+                weightCurrent += item.getWeight();
+                System.out.println("Item added: " + item);
+                return added;
+            } else {
+                return "No available slots.";
             }
         } else {
             return "Inventory Full";
         }
-
-        return null;
     }
 
     public String removeItemFromInventory(int invId, int itemid) {
@@ -109,13 +122,18 @@ public class Inventory {
         String removed = repository.removeItemFromInventory(invId, itemid);
         System.out.println(item);
         if (removed != null) {
-            System.out.println(item);
+            System.out.println(item + " to be removed");
             for (int i = 0; i < items.size(); i++) {
                 Item obj = items.get(i);
                 if (obj.getId() == itemid) {
                     items.remove(i);
                     slotCurrent --;
+                    if (checkItemStack(items, item)) {
+                        slotCurrent++;
+                    }
                     weightCurrent -= item.getWeight();
+                    String slotSet = repository.setSlot(slotCurrent, invId);
+                    System.out.println("Slot set: " + slotSet);
                     return "Item removed from inventory";
                 }
             }
@@ -129,6 +147,51 @@ public class Inventory {
         }
         return null;
     }
+    public boolean checkItemStack(List<Item> items, Item item) {
+        for (int i = 0; i < items.size(); i++) {
+            Item obj = items.get(i);
+            if (obj.getId() == item.getId()) {
+//        for (Item currentItem : items) {
+//            System.out.println("Checking item: " + currentItem + " against " + item);
+//            if (currentItem.equals(item)) { // Sammenlign objekter
+//                System.out.println("Success: Item found in stack - " + currentItem.getName());
+                System.out.println("Success");
+                if (item.getType().equals("Consumable")) {
+                   //slotCurrent--;
+                    return true;
+                }
+            }
+        }
+        System.out.println("Item not found in stack.");
+
+        return false;
+    }
+    public boolean checkWeight(Item item, int weightCurrent, int weightMax) {
+        if (item.getWeight() + weightCurrent <= weightMax) {
+            return true;
+        }
+        return false;
+    }
+    public boolean checkAvailableSlot(int slotCurrent, int slotCurrentMax){
+        if ((slotCurrent < slotCurrentMax)) {
+            return true;
+        }
+        return false;
+    }
+    public String incrementMaxSlot(int slotCurrentMax, int slotMax) {
+        int slotNewCurrentMax = slotCurrentMax;
+        if (slotCurrentMax <= slotMax - 10) {
+            slotNewCurrentMax = (slotCurrentMax + 10);
+            setSlotCurrentMax(slotNewCurrentMax);
+            String newSlotSize = repository.setSlotSize(slotNewCurrentMax, getId());
+            System.out.println(newSlotSize);
+            return "Slot size is now " + slotNewCurrentMax;
+        }
+        else{
+            return "Slot size couldn't be changed";
+        }
+    }
+
 
 
 //    List <Item> items = new ArrayList<>();

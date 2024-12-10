@@ -105,6 +105,39 @@ public class DatabaseRepository {
         }
         return ("Item deleted");
     }
+    public int createNewInventory(int idUser){
+        String sql = "INSERT INTO invtest (iduser) VALUES (?);";
+        try (Connection connection = DatabaseConnection.getconnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);) {
+            preparedStatement.setInt(1, idUser);
+
+            int rowsInserted = preparedStatement.executeUpdate();
+            if (rowsInserted > 0) {
+                System.out.println("New inventory created");
+                try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        System.out.println("Key generated");
+                        int newInventoryId = (generatedKeys.getInt(1));
+                        return newInventoryId;
+                    }
+                    else {
+                        throw new SQLException("Creating inventory failed, no ID obtained.");
+                    }
+                }
+
+            } else {
+                return 0;
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        catch(Exception e) {
+
+        }
+        return 0;
+    }
+
     public List <Item> initiateInventory(int inventoryId) {
         List<Item> items = new ArrayList<>();
         String sql = "SELECT invtest.idinvtest, itemtest.*\n" +
@@ -133,6 +166,42 @@ public class DatabaseRepository {
         }
         return items;
     }
+    public int initiateSlots(int inventoryId) {
+        String sql = "SELECT slotcurrent\n" +
+                "FROM invtest\n" +
+                "WHERE idinvtest = ?";
+
+        try (Connection connection = DatabaseConnection.getconnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+            preparedStatement.setInt(1, inventoryId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                int slotCurrent = resultSet.getInt("slotcurrent");
+                return slotCurrent;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+    public String setSlotSize(int slotNewMax, int inventoryId) {
+        String sql = "UPDATE invtest SET slotcurrentmax = ? WHERE idinvtest = ?";
+
+        try (Connection connection = DatabaseConnection.getconnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            preparedStatement.setInt(1, slotNewMax);
+            preparedStatement.setInt(2, inventoryId);
+
+            int updatedRows = preparedStatement.executeUpdate();
+            if (updatedRows > 0) {
+                System.out.println("updated...");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "Slot size updated in database";
+    }
     public String addItemToInventory(int fkinvtest, int fkitemtest) {
         String sql = "INSERT INTO invhasitemtest (fkinvtest, fkitemtest) VALUES (?, ?)";
         try (Connection connection = DatabaseConnection.getconnection();
@@ -150,6 +219,23 @@ public class DatabaseRepository {
             e.printStackTrace();
         }
         return null;
+    }
+    public String setSlot(int currentSlot, int inventoryId){
+        String sql = "UPDATE invtest SET slotcurrent = ? WHERE idinvtest = ?";
+
+        try (Connection connection = DatabaseConnection.getconnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            preparedStatement.setInt(1, (currentSlot));
+            preparedStatement.setInt(2, inventoryId);
+            int updatedRows = preparedStatement.executeUpdate();
+            if (updatedRows > 0) {
+                System.out.println("Slots updated");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return ("Slots updated");
     }
 
     public String removeItemFromInventory(int fkinvtest, int fkitemtest) {

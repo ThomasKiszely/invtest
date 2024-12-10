@@ -1,3 +1,5 @@
+import java.util.Objects;
+
 public class Item {
     private int id;
     private String name;
@@ -38,5 +40,17 @@ public class Item {
     public String toString() {
         return String.format("id: %d, name: %s, type: %s, weight: %d, description: %s, effect: %d", +
                 id, name, type, weight, description, effect);
+    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Item item = (Item) o;
+        return id == item.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, type, weight, description, effect);
     }
 }
