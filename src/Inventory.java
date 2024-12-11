@@ -1,10 +1,13 @@
 import java.io.FileWriter;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Scanner;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Inventory {
     private int id;
@@ -76,7 +79,7 @@ public class Inventory {
         int slot = repository.initiateSlots(id);
         int slotMax = repository.initiateMaxSlots(id);
         List<Item> items = repository.initiateInventory(inventoryId);
-        if (items.isEmpty()) { //skal den det????
+        if (items.isEmpty()) {
             return new Inventory(inventoryId, slot, slotMax, weight, items);
         } else {
             for (Item item : items) {
@@ -84,7 +87,7 @@ public class Inventory {
             }
             setSlotCurrent(slot);
             setWeightCurrent(weight);
-            setSlotCurrentMax(slotMax);//noget galt her
+            setSlotCurrentMax(slotMax);
             return new Inventory(inventoryId, slot, slotMax, weight, items);
         }
     }
@@ -124,7 +127,6 @@ public class Inventory {
     public String removeItemFromInventory(int invId, int itemid) {
         Item item = repository.getOneItem(itemid);
         String removed = repository.removeItemFromInventory(invId, itemid);
-        System.out.println(item);
         if (removed != null) {
             System.out.println(item + " to be removed");
             for (int i = 0; i < items.size(); i++) {
@@ -267,6 +269,29 @@ public class Inventory {
             }
         }
         return temp;
+    }
+
+    public Map <Item, Integer> showConsumables() {
+        System.out.println("Following is in your inventory:\n");
+        Map<Item, Integer> countItems = new HashMap<>();
+
+        // Tæller hver gang der er en ekstra item
+        for (Item item : items) {
+            if (item.getType().equals("Consumable")) {
+                countItems.put(item, countItems.getOrDefault(item, 0) + 1);
+            }
+        }
+        return countItems;
+    }
+    public List <Item> showArmorAndWeapons() {
+        ArrayList<Item> armorWeapons = new ArrayList<>();
+
+        for (Item item : items) {
+            if (item.getType().equals("Weapon") || item.getType().equals("Armor")) {
+                armorWeapons.add(item);
+            }
+        }
+        return armorWeapons;
     }
 }
 

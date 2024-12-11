@@ -2,6 +2,8 @@ import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Map;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
@@ -110,7 +112,6 @@ public class Main {
                         int itemId = input.nextInt();
                         String a2i = inventory.addItemToInventory(inventory.getId(), itemId);
                         System.out.println(a2i);
-                        //itemsMain.add(repository.getOneItem(itemId));
                         System.out.println("Følgende er nu i inventory:\n");
                         for (Item item : inventory.getItems()) {
                             System.out.println(item.getName());
@@ -126,22 +127,21 @@ public class Main {
                         int itemId = input.nextInt();
                         String removeFromInventory = inventory.removeItemFromInventory(inventory.getId(), itemId);
                         System.out.println(removeFromInventory);
-//                        for (int i = 0; i < itemsMain.size(); i++) {
-//                            Item obj = itemsMain.get(i);
-//                            if (obj.getId() == itemId) {
-//                                itemsMain.remove(i);
-//                                for (Item item : inventory.getItems()) {
-//                                    System.out.println(item.getName());
-//                                }
-//                          }
-//                        }
                     }
                     case 9 -> {
-                        for (Item item : inventory.getItems()) {
+                        System.out.println("You chose 9");
+                        Map<Item, Integer> consumables = inventory.showConsumables();
+                        List <Item> nonConsumableItems = inventory.showArmorAndWeapons();
+                        System.out.println("Armor and weapons in inventory: ");
+                        for (Item item : nonConsumableItems) {
                             System.out.println(item);
                         }
-                        System.out.println(inventory.getSlotCurrent() + " slots er brugt af " + inventory.getSlotCurrentMax());
-                        System.out.println(inventory.getWeightCurrent() + " er vægten oppe på");
+                        System.out.println("\nConsumables: ");
+                        for (Map.Entry<Item, Integer> entry : consumables.entrySet()) {
+                            System.out.println(entry.getValue() + " of " + entry.getKey());
+                        }
+                        System.out.println("\n" + inventory.getSlotCurrent() + " slots er brugt af " + inventory.getSlotCurrentMax());
+                        System.out.println(inventory.getWeightCurrent() + " er vægten oppe på\n");
                     }
                     case 10 -> {
                         System.out.println("You chose 10\nUpdating inventory size...");
