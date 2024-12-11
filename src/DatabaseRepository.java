@@ -159,6 +159,24 @@ public class DatabaseRepository {
         return items;
     }
 
+    public int initiateMaxSlots(int inventoryId) {
+        String sql = "SELECT slotcurrentmax\n" +
+                "FROM invtest\n" +
+                "WHERE idinvtest = ?";
+
+        try (Connection connection = DatabaseConnection.getconnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+            preparedStatement.setInt(1, inventoryId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                int slotCurrentMax = resultSet.getInt("slotcurrentmax");
+                return slotCurrentMax;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
     public int initiateSlots(int inventoryId) {
         String sql = "SELECT slotcurrent\n" +
                 "FROM invtest\n" +

@@ -18,7 +18,7 @@ public class Main {
                     "\n2 to see a list of items\n3 to update an item\n4 to delete an item\n5 to make a new inventory" +
                     "\n6 to choose inventory and show its items" +
                     "\n7 to add an item to inventory\n8 to remove item from inventory\n9 to show items in inventory" +
-                    "\n10 to increment slot size by 10\n11 to write out a text file of your inventory\n12 to exit" +
+                    "\n10 to increment slot size by 10\n11 to write out a text file of your inventory\n12 to sort after weight\n13 to exit" +
                     "\n");
             try {
                 int choice = input.nextInt();
@@ -139,12 +139,12 @@ public class Main {
                         for (Item item : inventory.getItems()) {
                             System.out.println(item);
                         }
-                        System.out.println(inventory.getSlotCurrent() + " slots er brugt");
+                        System.out.println(inventory.getSlotCurrent() + " slots er brugt af " + inventory.getSlotCurrentMax());
                         System.out.println(inventory.getWeightCurrent() + " er vægten oppe på");
                     }
                     case 10 -> {
                         System.out.println("You chose 10\nUpdating inventory size...");
-                        String slotSize = inventory.incrementMaxSlot(inventory.getSlotCurrentMax(), inventory.getSlotMax());
+                        String slotSize = inventory.incrementMaxSlot(inventory.getSlotCurrentMax(), inventory.getSlotMax(), inventory.getId());
                         System.out.println(slotSize);
                     }
                     case 11 -> {
@@ -153,9 +153,17 @@ public class Main {
                         System.out.println(exported);
                     }
                     case 12 -> {
+                        System.out.println("TestVægt!=!=!!=!=");
+                        inventory.highestWeight();
+                        for (Item item : inventory.getItems()) {
+                            System.out.println(item.getName() + ": " + item.getWeight());
+                        }
+                    }
+                    case 13 -> {
                         System.out.println("Exiting...");
                         return;
                     }
+
                     default -> {
                         System.out.println("Invalid choice try again");
                     }

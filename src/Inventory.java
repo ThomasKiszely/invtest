@@ -71,8 +71,9 @@ public class Inventory {
         int inventoryId = id;
         int weight = 0;
         int slot = repository.initiateSlots(id);
+        int slotMax = repository.initiateMaxSlots(id);
         List<Item> items = repository.initiateInventory(inventoryId);
-        if (items.isEmpty()) {
+        if (items.isEmpty()) { //skal den det????
             return new Inventory(inventoryId, slot, weight, items);
         } else {
             for (Item item : items) {
@@ -80,6 +81,7 @@ public class Inventory {
             }
             setSlotCurrent(slot);
             setWeightCurrent(weight);
+            setSlotCurrentMax(slotMax);//noget galt her
             return new Inventory(inventoryId, slot, weight, items);
         }
     }
@@ -93,6 +95,7 @@ public class Inventory {
                 if (slotCurrent <= slotCurrentMax) {
                     String added = repository.addItemToInventory(invId, itemid);
                     weightCurrent += item.getWeight();
+                    items.add(item);
                     System.out.println("Item added: " + item);
                     return added;
                 } else {
@@ -177,14 +180,31 @@ public class Inventory {
         }
         return false;
     }
+    public boolean checkGold(int invId) {
+        int gold = 0;
+        for (int i = 0; i < items.size(); i++) {
+            if (items.get(i).getId() == 1) {
+                gold++;
+            }
+        }
+        if (gold > 9) {
+            for (int i = 0; i <= 10; i++) {
+                removeItemFromInventory(invId,1);
 
-    public String incrementMaxSlot(int slotCurrentMax, int slotMax) {
-        int slotNewCurrentMax = slotCurrentMax;
-        if (slotCurrentMax <= slotMax - 10) {
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public String incrementMaxSlot(int slotCurrentMax, int slotMax, int invId) {
+        int slotNewCurrentMax;
+        if ((slotCurrentMax <= slotMax - 10) && (checkGold(invId))){
             slotNewCurrentMax = (slotCurrentMax + 10);
             setSlotCurrentMax(slotNewCurrentMax);
             String newSlotSize = repository.setSlotSize(slotNewCurrentMax, getId());
             System.out.println(newSlotSize);
+
             return "Slot size is now " + slotNewCurrentMax;
         }
         else{
@@ -203,6 +223,24 @@ public class Inventory {
             ioe.printStackTrace();
         }
         return "Inventory exported to file";
+    }
+
+    public List<Item> highestWeight() {
+        bubbleSortbyWeight(items);
+        return items;
+    }
+
+    public void bubbleSortbyWeight(List<Item> items) {
+        int n = items.size();
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = 0; j < n - i - 1; j++){
+                if (items.get(j).getWeight() > items.get(j + 1).getWeight()) {
+                    Item temp = items.get(j);
+                    items.set(j, items.get(j + 1));
+                    items.set(j + 1, temp);
+                }
+            }
+        }
     }
 }
 
