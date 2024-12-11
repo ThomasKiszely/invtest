@@ -18,7 +18,8 @@ public class Main {
                     "\n2 to see a list of items\n3 to update an item\n4 to delete an item\n5 to make a new inventory" +
                     "\n6 to choose inventory and show its items" +
                     "\n7 to add an item to inventory\n8 to remove item from inventory\n9 to show items in inventory" +
-                    "\n10 to increase slot size by 10\n11 to write out a text file of your inventory\n12 to sort after weight\n13 to exit" +
+                    "\n10 to increase slot size by 10\n11 to write out a text file of your inventory\n12 to sort after weight" +
+                    "\n13 to search for an item\n14 to exit" +
                     "\n");
             try {
                 int choice = input.nextInt();
@@ -160,6 +161,23 @@ public class Main {
                         }
                     }
                     case 13 -> {
+                        System.out.println("You chose 13\nPress 1 to search for item type\nPress 2 to search for name");
+                        int searchType = input.nextInt();
+                        if (searchType == 1) {
+                            List<Item> searchByType = inventory.searchByType();
+                            for (Item searchByTypes : searchByType) {
+                                System.out.println(searchByTypes);
+                            }
+                        }
+                        if (searchType == 2) {
+                            List <Item> searchByName = inventory.searchByName();
+                            for (Item searchByNames : searchByName) {
+                                System.out.println(searchByNames);
+                            }
+                        }
+                    }
+
+                    case 14 -> {
                         System.out.println("Exiting...");
                         return;
                     }

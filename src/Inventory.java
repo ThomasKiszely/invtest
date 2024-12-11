@@ -4,6 +4,7 @@ import java.util.List;
 import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Scanner;
 
 public class Inventory {
     private int id;
@@ -13,6 +14,7 @@ public class Inventory {
     private int weightCurrent;
     private final int weightMax = 50;
     public List<Item> items = new ArrayList<>();
+    Scanner input = new Scanner(System.in);
 
     DatabaseRepository repository = new DatabaseRepository();
 
@@ -242,6 +244,29 @@ public class Inventory {
                 }
             }
         }
+    }
+    public List<Item> searchByType() {
+        List <Item> temp = new ArrayList<>();
+        System.out.println("Enter type to search for: Weapon, Armor or Consumable");
+        String type = input.nextLine();
+        for (Item item : items) {
+            System.out.println(item.getType().toLowerCase());
+            if (item.getType().toLowerCase().equals(type.toLowerCase())) {
+                temp.add(item);
+            }
+        }
+        return temp;
+    }
+    public List<Item> searchByName() {
+        List <Item> temp = new ArrayList<>();
+        System.out.println("Enter name or part of name to search for: ");
+        String name = input.nextLine();
+        for (Item item : items) {
+            if (item.getName().toLowerCase().contains(name.toLowerCase())) {
+                temp.add(item);
+            }
+        }
+        return temp;
     }
 }
 
