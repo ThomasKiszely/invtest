@@ -16,9 +16,10 @@ public class Inventory {
 
     DatabaseRepository repository = new DatabaseRepository();
 
-    public Inventory(int id, int slotCurrent, int weightCurrent, List<Item> items) {
+    public Inventory(int id, int slotCurrent, int slotCurrentMax, int weightCurrent, List<Item> items) {
         this.id = id;
         this.slotCurrent = slotCurrent;
+        this.slotCurrentMax = slotCurrentMax;
         this.weightCurrent = weightCurrent;
         this.items = items;
     }
@@ -74,7 +75,7 @@ public class Inventory {
         int slotMax = repository.initiateMaxSlots(id);
         List<Item> items = repository.initiateInventory(inventoryId);
         if (items.isEmpty()) { //skal den det????
-            return new Inventory(inventoryId, slot, weight, items);
+            return new Inventory(inventoryId, slot, slotMax, weight, items);
         } else {
             for (Item item : items) {
                 weight += item.getWeight();
@@ -82,7 +83,7 @@ public class Inventory {
             setSlotCurrent(slot);
             setWeightCurrent(weight);
             setSlotCurrentMax(slotMax);//noget galt her
-            return new Inventory(inventoryId, slot, weight, items);
+            return new Inventory(inventoryId, slot, slotMax, weight, items);
         }
     }
 
@@ -197,7 +198,7 @@ public class Inventory {
         return false;
     }
 
-    public String incrementMaxSlot(int slotCurrentMax, int slotMax, int invId) {
+    public String increaseMaxSlot(int slotCurrentMax, int slotMax, int invId) {
         int slotNewCurrentMax;
         if ((slotCurrentMax <= slotMax - 10) && (checkGold(invId))){
             slotNewCurrentMax = (slotCurrentMax + 10);

@@ -177,6 +177,7 @@ public class DatabaseRepository {
         }
         return 0;
     }
+
     public int initiateSlots(int inventoryId) {
         String sql = "SELECT slotcurrent\n" +
                 "FROM invtest\n" +

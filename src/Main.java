@@ -7,7 +7,7 @@ public class Main {
     public static void main(String[] args) {
         DatabaseRepository repository = new DatabaseRepository();
         List<Item> itemsMain = new ArrayList<>();
-        Inventory inventory = new Inventory(0,0, 0, itemsMain);
+        Inventory inventory = new Inventory(0,0, 0,0, itemsMain);
         Scanner input = new Scanner(System.in);
 
         System.out.println("---Initializing---");
@@ -18,7 +18,7 @@ public class Main {
                     "\n2 to see a list of items\n3 to update an item\n4 to delete an item\n5 to make a new inventory" +
                     "\n6 to choose inventory and show its items" +
                     "\n7 to add an item to inventory\n8 to remove item from inventory\n9 to show items in inventory" +
-                    "\n10 to increment slot size by 10\n11 to write out a text file of your inventory\n12 to sort after weight\n13 to exit" +
+                    "\n10 to increase slot size by 10\n11 to write out a text file of your inventory\n12 to sort after weight\n13 to exit" +
                     "\n");
             try {
                 int choice = input.nextInt();
@@ -144,7 +144,7 @@ public class Main {
                     }
                     case 10 -> {
                         System.out.println("You chose 10\nUpdating inventory size...");
-                        String slotSize = inventory.incrementMaxSlot(inventory.getSlotCurrentMax(), inventory.getSlotMax(), inventory.getId());
+                        String slotSize = inventory.increaseMaxSlot(inventory.getSlotCurrentMax(), inventory.getSlotMax(), inventory.getId());
                         System.out.println(slotSize);
                     }
                     case 11 -> {
