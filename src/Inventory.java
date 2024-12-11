@@ -16,7 +16,7 @@ public class Inventory {
     private final int slotMax = 192;
     private int weightCurrent;
     private final int weightMax = 50;
-    public List<Item> items = new ArrayList<>();
+    public List<Item> items;
     Scanner input = new Scanner(System.in);
 
     DatabaseRepository repository = new DatabaseRepository();
@@ -26,7 +26,7 @@ public class Inventory {
         this.slotCurrent = slotCurrent;
         this.slotCurrentMax = slotCurrentMax;
         this.weightCurrent = weightCurrent;
-        this.items = items;
+        this.items = new ArrayList<Item> (items);
     }
 
     public int getId() {
@@ -252,10 +252,13 @@ public class Inventory {
         System.out.println("Enter type to search for: Weapon, Armor or Consumable");
         String type = input.nextLine();
         for (Item item : items) {
-            System.out.println(item.getType().toLowerCase());
+            //System.out.println(item.getType().toLowerCase());
             if (item.getType().toLowerCase().equals(type.toLowerCase())) {
                 temp.add(item);
             }
+        }
+        if (temp.size() == 0) {
+            System.out.println("No items found");
         }
         return temp;
     }
@@ -268,17 +271,23 @@ public class Inventory {
                 temp.add(item);
             }
         }
+        if (temp.size() == 0) {
+            System.out.println("No items found");
+        }
         return temp;
     }
 
     public Map <Item, Integer> showConsumables() {
         System.out.println("Following is in your inventory:\n");
         Map<Item, Integer> countItems = new HashMap<>();
-
-        // Tæller hver gang der er en ekstra item
         for (Item item : items) {
             if (item.getType().equals("Consumable")) {
-                countItems.put(item, countItems.getOrDefault(item, 0) + 1);
+                if (!countItems.containsKey(item)) {
+                    countItems.put(item, 1);
+                }
+                else {
+                    countItems.put(item, countItems.get(item) + 1);
+                }
             }
         }
         return countItems;

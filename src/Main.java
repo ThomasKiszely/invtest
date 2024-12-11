@@ -8,8 +8,8 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         DatabaseRepository repository = new DatabaseRepository();
-        List<Item> itemsMain = new ArrayList<>();
-        Inventory inventory = new Inventory(0,0, 0,0, itemsMain);
+        List <Item> items = new ArrayList<>();
+        Inventory inventory = new Inventory(0,0, 0,0, items);
         Scanner input = new Scanner(System.in);
 
         System.out.println("---Initializing---");
@@ -138,7 +138,7 @@ public class Main {
                         }
                         System.out.println("\nConsumables: ");
                         for (Map.Entry<Item, Integer> entry : consumables.entrySet()) {
-                            System.out.println(entry.getValue() + " of " + entry.getKey());
+                            System.out.println((entry.getValue()) + " of " + entry.getKey());
                         }
                         System.out.println("\n" + inventory.getSlotCurrent() + " slots er brugt af " + inventory.getSlotCurrentMax());
                         System.out.println(inventory.getWeightCurrent() + " er vægten oppe på\n");
