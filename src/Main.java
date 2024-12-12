@@ -3,6 +3,7 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Map;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class Main {
@@ -26,7 +27,7 @@ public class Main {
             try {
                 int choice = input.nextInt();
                 switch (choice) {
-                    case 1 -> {
+                    case 1 -> {  //De første 6 er for developer
                         System.out.println("You chose 1");
                         System.out.println("Enter id");
                         int id = input.nextInt();
@@ -106,7 +107,7 @@ public class Main {
                                     " out of " + inventory.getWeightMax() + "\n");
                         }
                     }
-                    case 7 -> {
+                    case 7 -> {     //Spiller orienteret
                         System.out.println("You chose 7");
                         System.out.println("Indtast id for 'item', der skal tilføjes");
                         int itemId = input.nextInt();
@@ -154,10 +155,19 @@ public class Main {
                         System.out.println(exported);
                     }
                     case 12 -> {
-                        System.out.println("TestVægt!=!=!!=!=");
-                        inventory.highestWeight();
-                        for (Item item : inventory.getItems()) {
-                            System.out.println(item.getName() + ": " + item.getWeight());
+                        System.out.println("You chose 12\nPress 1 to search from highest weight to lowest weight\nPress 2 to search from lowest weight to highest weight");
+                        int searchType = input.nextInt();
+                        if (searchType == 2) {
+                            inventory.highestWeight();
+                            for (Item item : inventory.getItems()) {
+                                System.out.println(item.getName() + ": " + item.getWeight());
+                            }
+                        }
+                        if (searchType == 1) {
+                            inventory.lowestWeight();
+                            for (Item item : inventory.getItems()) {
+                                System.out.println(item.getName() + ": " + item.getWeight());
+                            }
                         }
                     }
                     case 13 -> {

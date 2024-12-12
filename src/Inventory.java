@@ -26,7 +26,7 @@ public class Inventory {
         this.slotCurrent = slotCurrent;
         this.slotCurrentMax = slotCurrentMax;
         this.weightCurrent = weightCurrent;
-        this.items = new ArrayList<Item> (items);
+        this.items = items;
     }
 
     public int getId() {
@@ -231,15 +231,33 @@ public class Inventory {
     }
 
     public List<Item> highestWeight() {
-        bubbleSortbyWeight(items);
+        bubbleSortbyWeightHi(items);
         return items;
     }
 
-    public void bubbleSortbyWeight(List<Item> items) {
+    public void bubbleSortbyWeightHi(List<Item> items) {
         int n = items.size();
         for (int i = 0; i < n - 1; i++) {
             for (int j = 0; j < n - i - 1; j++){
                 if (items.get(j).getWeight() > items.get(j + 1).getWeight()) {
+                    Item temp = items.get(j);
+                    items.set(j, items.get(j + 1));
+                    items.set(j + 1, temp);
+                }
+            }
+        }
+    }
+
+    public List<Item> lowestWeight() {
+        bubbleSortbyWeightLo(items);
+        return items;
+    }
+
+    public void bubbleSortbyWeightLo(List<Item> items) {
+        int n = items.size();
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = 0; j < n - i - 1; j++){
+                if (items.get(j).getWeight() < items.get(j + 1).getWeight()) {
                     Item temp = items.get(j);
                     items.set(j, items.get(j + 1));
                     items.set(j + 1, temp);
@@ -288,7 +306,7 @@ public class Inventory {
                 else {
                     countItems.put(item, countItems.get(item) + 1);
                 }
-            }
+            } System.out.println(countItems);
         }
         return countItems;
     }
